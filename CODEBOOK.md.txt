@@ -1,0 +1,46 @@
+This code book will explain the data and the related transformations that will lead to a tidy data set. The following files have been used in creating the tidy data set
+
+Test Files 
+	1. Subject_test - has the subject ids under the test criteria
+	2. X_test - contains the MEAN, SD and related readings for triaxial acceleration, triaxial angular velocity, estimated body acceleration, feature vector with time and frequency variables
+	3. y_test - contains the activities for the subjects and readings related to the above set of files
+
+TrainFiles 
+	1. Subject_train - has the subject ids under the train criteria
+	2. X_train - contains the MEAN, SD and related readings for triaxial acceleration, triaxial angular velocity, estimated body acceleration, feature vector with time and frequency variables
+	3. y_train - contains the activities for the subjects and readings related to the above set of files
+
+Activity_labels.txt - contains the activity names and the related ids. The ids in this file are referenced in the y_test and y_train files
+
+Features.txt - contains the names of variables that were measured as part of this experiment. These names will become the columns for the observations in X_test and X_train 
+
+Dataframes
+	1. xtestdf - X_test.txt 
+	2. ytestdf - y_test.txt 
+	3. subjecttestdf - Subject_test.txt 
+	4. xtraindf - X_train.txt
+	5. ytraindf - y_train.txt 
+	6. subjecttraindf - Subject_train.txt 
+	7. featuresdf - Features.txt 
+	8. activitylabels - activity_labels.txt
+	9. testdata - contains the observations from xtestdf but with only cols having mean() and std() in its name
+	10. testdf - merged data from testdata, ytestdf, and subjecttestdf with mean() and std() cols
+	11. traindata - contains the observations from xtraindf but with only cols having mean() and std() in its name
+	12. traindf - merged data from traindata, ytraindf, and subjecttraindf with mean() and std() cols
+	13. combineddata - merge testdf and traindf into one dataframe
+	14. mergeddata - combineddata with activity ids and activity names
+	15. tidydata - summarized merged data with mean for subjectid + activityname combination
+	
+
+Transformations
+	1. Consider the test files. The X_test contains all the observations. The subject_test contains the subject ids while the y_test contains the activities for the subjects. 
+	2. Read the column header names from features.txt  into featuresdf. Convert these values to vector and append them as col names to xtestdf 
+	3. Grep and subset from the xtestdf to create testdata that will contain cols with only mean() and std(). This will have 2947 rows and 66 cols
+	4. Create testdf with subjectid, activityid, and mean() + std() variables as columns. This will have 2947 rows and 68 cols
+	5. Repeat steps#1 to #4 for train data and create traindf with subjectid, activityid , and mean() + std() variables as cols. This will have 7352 rows and 68 cols
+	6. Merge testdf and traindf using rbind to get 10299 rows and 68 cols
+	7. Create mergeddata by merging the result from #6 with activitylabels (merged by activity id)
+	8. Replace the "-" in the col names with "." so that any further subsetting will not throw an error. The col names at this stage are very descriptive for the reader
+	9. Drop the activityid col from mergeddata since activityname is sufficient
+
+Summarize the mergeddata to create tidydata using aggregate function. This will produce a tidydata frame with 180 rows (30 subjects * 6 activities) and 68 cols (1 subject id, 1 activityname, 66 cols which represent the average of  mean() and std() variables
